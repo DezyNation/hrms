@@ -12,8 +12,8 @@ services:
     environment:
       - DEBUG=0
       - SECRET_KEY=${SECRET_KEY}
-      - ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
-      - CSRF_TRUSTED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+      - ALLOWED_HOSTS=${DOMAIN}
+      - CSRF_TRUSTED_ORIGINS=${PROTOCOL}://${DOMAIN}
       - DATABASE_URL=postgres://horilla_user:horilla_pass@db:5432/horilla_db
       - REDIS_URL=redis://:horilla_pass@redis:6379/0
     networks:
