@@ -1,44 +1,51 @@
 services:
   web:
     build: .
+    restart: always
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn horilla.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-      - .:/app
-      - staticfiles:/app/staticfiles
-      - media:/app/media
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     environment:
       - DEBUG=0
-      - SECRET_KEY=prod-secret-key
+      - SECRET_KEY=your-very-secure-random-key-here
       - ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
       - CSRF_TRUSTED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
       - DATABASE_URL=postgres://horilla_user:horilla_pass@db:5432/horilla_db
       - REDIS_URL=redis://:horilla_pass@redis:6379/0
     depends_on:
-      - db
-      - redis
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.horilla.rule=Host(`yourdomain.com`,`www.yourdomain.com`)"
-      - "traefik.http.routers.horilla.entrypoints=websecure"
-      - "traefik.http.routers.horilla.tls=true"
-      - "traefik.http.services.horilla.loadbalancer.server.port=8000"
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
 
   db:
     image: postgres:16-alpine
+    restart: always
     environment:
       POSTGRES_DB: horilla_db
       POSTGRES_USER: horilla_user
       POSTGRES_PASSWORD: horilla_pass
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U horilla_user -d horilla_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
+    restart: always
     command: redis-server --appendonly yes --requirepass horilla_pass
     volumes:
       - redis_data:/data
 
 volumes:
-  staticfiles:
-  media:
+  static_volume:
+  media_volume:
   postgres_data:
   redis_data:
