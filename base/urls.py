@@ -61,6 +61,8 @@ from base.models import (
 from horilla_audit.cbv import audit
 from horilla_audit.models import AuditTag
 
+from core.views import health
+
 urlpatterns = [
     path("", views.home, name="home-page"),
     path(
