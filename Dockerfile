@@ -82,4 +82,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/health/ || exit 1
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["gunicorn", "horilla.wsgi:application", "--config", "docker/gunicorn.conf.py"]
+CMD ["gunicorn", "horilla.wsgi:application --bind 0.0.0.0:8000", "--config", "docker/gunicorn.conf.py"]
