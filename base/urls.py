@@ -64,6 +64,7 @@ from horilla_audit.models import AuditTag
 from core.views import health
 
 urlpatterns = [
+    path("health/", health),
     path("", views.home, name="home-page"),
     path(
         "employee/work-type-request-view/",
