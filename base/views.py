@@ -225,6 +225,8 @@ CHARTS = [
     ("feedback_status", _("Feedback Status")),
 ]
 
+def health(request):
+    return JsonResponse({"status": "ok"})
 
 def custom404(request):
     """
