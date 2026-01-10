@@ -5,9 +5,7 @@ echo "Starting Horilla HR..."
 
 # Wait for PostgreSQL to be ready
 echo "Waiting for PostgreSQL..."
-while ! nc -z db 5432; do
-  sleep 0.1
-done
+sleep 0.5
 echo "PostgreSQL is ready!"
 
 # Run migrations
