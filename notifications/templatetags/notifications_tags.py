@@ -4,7 +4,6 @@ from django import get_version
 from django.template import Library
 from django.urls import reverse
 from django.utils.html import format_html
-from django.utils.safestring import mark_safe
 
 register = Library()
 
@@ -79,7 +78,7 @@ def live_notify_badge(context, badge_class="live_notify_badge"):
     html = "<span class='{badge_class}'>{unread}</span>".format(
         badge_class=badge_class, unread=user.notifications.unread().count()
     )
-    return mark_safe(html)
+    return format_html(html)
 
 
 @register.simple_tag
