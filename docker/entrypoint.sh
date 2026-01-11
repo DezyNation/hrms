@@ -3,15 +3,10 @@ set -e
 
 echo "Starting Horilla HR..."
 
-# Wait for PostgreSQL to be ready
-echo "Waiting for PostgreSQL..."
-while ! nc -z db 5432; do
-  sleep 0.1
-done
-echo "PostgreSQL is ready!"
+# (Optional) wait if DB is slow
+sleep 2
 
-# Run migrations
-python manage.py makemigrations
+# Apply existing migrations only
 python manage.py migrate --noinput
 
 # Collect static files
