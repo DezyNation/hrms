@@ -16,6 +16,20 @@ services:
       - REDIS_URL=redis://:horilla_pass@redis:6379/0
     depends_on:
       - redis
+    restart: unless-stopped
+
+  migrate:
+    build: .
+    command: python manage.py migrate --noinput
+    volumes:
+      - .:/app
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=${SECRET_KEY}
+      - DATABASE_URL=${DB_URL}
+    depends_on:
+      - redis
+    restart: "no"
 
   redis:
     image: redis:7-alpine
